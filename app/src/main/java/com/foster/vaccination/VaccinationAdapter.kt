@@ -35,11 +35,12 @@ class VaccinationAdapter(var dataSet: List<VaccinationInfo>) :
             val country = dataSet[position]
             viewHolder.textViewCountry.text = country.country
             viewHolder.textViewVacCount.text = country.timeline[country.timeline.lastKey()].toString()
+            viewHolder.layout.setOnClickListener {
                 val context = viewHolder.layout.context
                 val heroDetailIntent = Intent(context, VaccinationDetailActivity::class.java).apply{
                     putExtra(VaccinationDetailActivity.EXTRA_COUNTRY, country)
                 }
-                context.startActivity(heroDetailIntent)
+                context.startActivity(heroDetailIntent) }
             }
 
     override fun getItemCount(): Int {

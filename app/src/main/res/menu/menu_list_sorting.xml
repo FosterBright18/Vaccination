@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_sorting_byName"
+        android:title="Sort by Name" />
+    <item
+        android:id="@+id/menu_sorting_byTotalVax"
+        android:title="Sort by Total Vaccinations" />
+    <item
+        android:id="@+id/menu_sorting_byDif"
+        android:title="Sort by Largest Increase" />
+</menu>

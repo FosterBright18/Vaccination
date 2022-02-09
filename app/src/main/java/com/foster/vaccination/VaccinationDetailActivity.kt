@@ -19,6 +19,6 @@ class VaccinationDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         val countryInfo = intent.getParcelableExtra<VaccinationInfo>(EXTRA_COUNTRY)
         binding.textViewDetailCountry.text = countryInfo?.country ?: "country"
-        binding.textViewDetailTimeline.text = (countryInfo?.timeline ?: "timeline") as CharSequence?
+        binding.textViewDetailTimeline.text = ((countryInfo?.timeline ?: "timeline").toString())
         }
     }
