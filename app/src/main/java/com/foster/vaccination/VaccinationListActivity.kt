@@ -59,6 +59,7 @@ public class VaccinationListActivity : AppCompatActivity() {
         val vaccineApi = RetrofitHelper.getInstance().create(Covid19Service::class.java)
         val vaccineCall = vaccineApi.getVaccinations(10)
 
+
         vaccineCall.enqueue(object : Callback<List<VaccinationInfo>> {
             override fun onResponse(
                 call: Call<List<VaccinationInfo>>,
@@ -66,7 +67,7 @@ public class VaccinationListActivity : AppCompatActivity() {
             ) {
                 Log.d(TAG, "onResponse: ${response.body()}")
                 vaccineList = response.body() ?: listOf<VaccinationInfo>()
-                val adapter = VaccinationAdapter(vaccineList)
+                adapter = VaccinationAdapter(vaccineList)
                 binding.recyclerViewVaccinationList.adapter = adapter
                 binding.recyclerViewVaccinationList.layoutManager = LinearLayoutManager(this@VaccinationListActivity)
             }
@@ -76,6 +77,20 @@ public class VaccinationListActivity : AppCompatActivity() {
             }
 
         })
+
+
+        val worldwideCall = vaccineApi.getWorldwide()
+        worldwideCall.enqueue(object: Callback<WorldwideInfo>{
+            override fun onResponse(call: Call<WorldwideInfo>, response: Response<WorldwideInfo>) {
+                Log.d(TAG, "onResponse: ${response.body()}")
+            }
+
+            override fun onFailure(call: Call<WorldwideInfo>, t: Throwable) {
+                Log.d(TAG, "onFailure: ${t.message}")
+            }
+        })
+
+
 
 
 
@@ -100,13 +115,19 @@ public class VaccinationListActivity : AppCompatActivity() {
             }
             R.id.menu_sorting_byTotalVax -> {
                 Toast.makeText(this, "You sorted by total vaccinations", Toast.LENGTH_SHORT).show()
-                adapter.dataSet = adapter.dataSet.sortedBy {it.timeline[it.timeline.lastKey()].toString()}
+                adapter.dataSet = adapter.dataSet.sortedByDescending {it.timeline[it.timeline.lastKey()]}
                 adapter.notifyDataSetChanged()
                 true
             }
             R.id.menu_sorting_byDif -> {
                 Toast.makeText(this, "You sorted by largest increase in the last 10 days", Toast.LENGTH_SHORT).show()
-                adapter.dataSet = adapter.dataSet.sortedBy {it.country}
+                adapter.dataSet = adapter.dataSet.sortedBy {
+                    it.timeline[it.timeline.firstKey()]?.let { it1 ->
+                        it.timeline[it.timeline.lastKey()]?.minus(
+                            it1
+                        )
+                    }
+                }
                 adapter.notifyDataSetChanged()
                 true
             }
